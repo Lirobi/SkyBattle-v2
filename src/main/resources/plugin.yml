@@ -1,0 +1,4 @@
+name: SkyBattle
+version: '${version}'
+main: fr.lirobi.skybattle.SkyBattle
+authors: [Lirobi]
