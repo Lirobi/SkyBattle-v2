@@ -1,24 +1,55 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'fr.lirobi'
 version = '2.0'
 
 repositories {
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+
+    maven {
+        name = 'citizens-repo'
+        url = 'https://maven.citizensnpcs.co/repo'
+    }
+
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven { url "https://repo.dmulloy2.net/repository/public/" }
+
+    // Ajout de nouveaux dépôts potentiels
+    maven {
+        name = 'byteflux-repo'
+        url = 'https://repo.byteflux.net/releases'
+    }
+    maven {
+        url 'https://maven.elmakers.com/repository'
+    }
+    maven {
+        url 'https://repo.codemc.io/repository/maven-public/'
+    }
+
     mavenCentral()
-    maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
-    }
+    mavenLocal()
 }
 
 dependencies {
-compileOnly "com.destroystokyo.paper:paper-api:1.12-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT"
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
+
+
+    implementation 'fr.mrmicky:fastboard:2.1.2'
+    implementation 'com.comphenix.protocol:ProtocolLib:5.1.0'
+
+
 }
 
 def targetJavaVersion = 8
@@ -29,6 +60,10 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
+}
+
+jar {
+    destinationDirectory.set(file("$projectDir/server-dev/plugins/"))
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -47,3 +82,11 @@ processResources {
         expand props
     }
 }
+
+shadowJar {
+    archiveClassifier.set('')
+    relocate 'fr.mrmicky.fastboard', 'fr.lirobi.shaded.fr.mrmicky.fastboard'
+
+}
+
+build.dependsOn shadowJar

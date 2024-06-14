@@ -1,0 +1,196 @@
+@startuml
+
+
+class SkyBattle {
+
+}
+
+package world {
+    enum WorldType {
+            LOBBY,
+            GAME
+   }
+
+   class SbWorld {
+           - world: World;
+           - type: WorldType;
+           - name: String;
+
+           + <<create>> SbWorld(name: String, type: WorldType) : void;
+           + getWorld() : World;
+           + getType() : WorldType;
+           + getName() : String;
+           + getSbWorldByBukkitWorld(world: World) : SbWorld;
+   }
+}
+
+
+package listeners {
+    class PlayerJoin {
+    }
+    class PlayerQuit {
+    }
+}
+
+package commands {
+    class GameCommand {
+    }
+    class HubCommand {
+    }
+    class MenuCommand {
+    }
+}
+
+
+
+package lobby {
+    class Lobby {
+        - world : World;
+    }
+
+    class ScoreboardTask {
+    }
+
+    class NpcTask {
+    }
+
+    class MenuHandler {
+    }
+
+    class LobbyJoin {
+    }
+}
+
+package game {
+
+    class Game {
+        - world : SbWorld;
+        - plugin : SkyBattle;
+        - gameState gameState;
+        - teams : List<Team>;
+        - placedBlocks: List<Block>;
+        - gameTimer : int;
+        - waitingTimer : int;
+
+        + <<create>> Game(plugin: SkyBattle, world : World) : void;
+        + start() : void;
+        + end() : void;
+
+        + startGameTimer() : void;
+        + startWaitingTimer() : void;
+
+
+        + setGameState(gameState: GameState) : void;
+        + setGameTimer(timer: int) : void;
+        + setWaitingTimer(timer: int) : void;
+        + getWorld() : World;
+        + getGameState() : GameState;
+        + getTeams() : List<Team>;
+        + getGameTimer() : int;
+        + getPlugin() : SkyBattle;
+
+
+   }
+
+
+   class GameListeners {
+        - plugin: SkyBattle;
+        - game: Game;
+
+        + <<create>> GameListeners(plugin: SkyBattle, game: Game) : void;
+
+
+        + onBlockPlace(e : BlockPlaceEvent): void {event}
+   }
+
+
+   class ScoreBoardTask {
+        - game: Game;
+
+        + <<create>> ScoreBoardTask(game: Game) : void;
+   }
+
+   class SbPlayer {
+        - player: Bukkit.Player;
+        - game: Game;
+        - team: Team;
+        - kit: Kit;
+        - kills: int;
+        - deaths: int;
+        - lastDamager: SbPlayer;
+        - lastVictim: SbPlayer;
+
+        + <<create>> SbPlayer(player: Player, game: Game) : void;
+        + respawn() : void;
+        + die() : void;
+        + kill(victim: SbPlayer) : void;
+        + setKit(kit: Kit) : void;
+        + setTeam(team: Team) : void;
+        + setLastDamager(damager: SbPlayer) : void;
+        + setLastVictim(victim: SbPlayer) : void;
+
+        + getPlayer() : Player;
+        + getGame() : Game;
+        + getTeam() : Team;
+        + getKit() : Kit;
+        + getKills() : int;
+        + getDeaths() : int;
+        + getLastDamager() : SbPlayer;
+        + getLastVictim() : SbPlayer;
+
+        + getSbPlayerByBukkitPlayer(player: Player) : SbPlayer;
+   }
+
+
+   class Team {
+        - players : List<SbPlayer>;
+        - color : ChatColor;
+        - name : String;
+        - game : Game;
+        - maxPlayers: int
+        - spawnLocation : Location;
+        - crystalLocation : Location;
+        - crystalHealth : int;
+        - crystalMaxHealth : int;
+
+
+        + <<create>> Team(name: String, color: ChatColor) : void;
+        + addPlayer(player: SbPlayer) : void;
+        + removePlayer(player: SbPlayer) : void;
+        + setSpawnLocation(location: Location) : void;
+        + setCrystalLocation(location: Location) : void;
+        + setCrystalHealth(health: int) : void;
+        + setCrystalMaxHealth(health: int) : void;
+        + setGame(game: Game) : void;
+   }
+
+
+   class Kit {
+        - name : String;
+
+        + giveDefaultKit(player: SbPlayer) : void;
+   }
+
+
+
+   enum GameState {
+        WAITING,
+        STARTING,
+        PLAYING,
+        ENDING,
+        ENDED
+   }
+
+   class GameJoin {
+        - plugin: SkyBattle;
+        - game: Game;
+   }
+   class GameQuit {
+        - plugin: SkyBattle;
+        - game: Game;
+   }
+}
+
+
+
+@enduml

@@ -1,4 +1,22 @@
 name: SkyBattle
 version: '${version}'
 main: fr.lirobi.skybattle.SkyBattle
-authors: [Lirobi]
+authors: [ Lirobi ]
+commands:
+  game:
+    description: manage the game
+    usage: /game <start|stop|set|join|spectate>
+    permission: skybattle.game
+    aliases: [ g ]
+  menu:
+    description: open the game menu
+    usage: /menu <join|stats>
+  hub:
+    description: go back to the hub
+    usage: /hub
+    aliases: [ lobby, spawn ]
+  test:
+    description: test command
+    usage: /test
+    permission: skybattle.test
+    aliases: [ t ]
